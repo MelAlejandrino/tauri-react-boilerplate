@@ -5,16 +5,27 @@ import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
 import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
 import {useAuth} from '@/context/use-auth.ts';
+import {invoke} from "@tauri-apps/api/core";
+import {Spinner} from "@/components/ui/spinner.tsx";
+import {toast} from "sonner";
 
 export default function Login() {
-    const {login} = useAuth();
+    const {login, isLoading} = useAuth();
     const navigate = useNavigate();
-    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = () => {
-        login({id: '123', name});
-        navigate('/dashboard', {replace: true});
+    const handleLogin = async () => {
+        try {
+            const token = await invoke('sign_in', {email, password})
+            const user = await login(token as string);
+            if (user) {
+                navigate('/dashboard', {replace: true});
+            }
+
+        } catch (error) {
+            toast.error(error as string);
+        }
     };
 
     return (
@@ -25,12 +36,12 @@ export default function Login() {
                 </CardHeader>
                 <CardContent className="flex flex-col gap-4">
                     <div className="flex flex-col gap-1">
-                        <Label>Name</Label>
+                        <Label>Email</Label>
                         <Input
-                            type="text"
-                            placeholder="Enter your name"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            type="email"
+                            placeholder="Enter your email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                     </div>
 
@@ -44,8 +55,8 @@ export default function Login() {
                         />
                     </div>
 
-                    <Button onClick={handleLogin} className="w-full mt-2">
-                        Login
+                    <Button onClick={handleLogin} disabled={isLoading} className="w-full mt-2">
+                        {isLoading ? <><Spinner/>Logging In</> : 'Log In'}
                     </Button>
                 </CardContent>
             </Card>

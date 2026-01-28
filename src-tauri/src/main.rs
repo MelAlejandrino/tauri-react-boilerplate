@@ -1,6 +1,45 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+use crate::supabase::client::Supabase;
+use dotenvy::dotenv;
+use std::env;
+use supabase_auth::models::AuthClient;
+use supabase_rs::SupabaseClient;
+
+mod commands;
+mod supabase;
+
+struct AppState {
+    supabase: Supabase,
+    auth_client: AuthClient,
+}
+
 fn main() {
-    tauri_app_lib::run()
+    dotenv().ok();
+
+    let url = env::var("SUPABASE_URL").expect("SUPABASE_URL missing");
+    let key = env::var("SUPABASE_ANON_KEY").expect("SUPABASE_ANON_KEY missing");
+    let jwt_secret = env::var("SUPABASE_JWT_SECRET").expect("SUPABASE_JWT_SECRET missing");
+
+    let supabase = Supabase::new(&url, &key);
+    let auth_client = AuthClient::new(&url, &key, &jwt_secret);
+
+    let app_state = AppState {
+        supabase,
+        auth_client,
+    };
+
+    println!("Loaded Supabase URL: {}", &url);
+    println!("Loaded Anon Key (first 10 chars): {}", &key[..10]);
+    println!("Loaded Supabase JWT: {}", &jwt_secret);
+
+    tauri::Builder::default()
+        .manage(app_state)
+        .invoke_handler(tauri::generate_handler![
+            commands::sign_in,
+            commands::get_user_data
+        ])
+        .run(tauri::generate_context!())
+        .expect("error while running tauri application");
 }

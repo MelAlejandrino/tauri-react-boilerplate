@@ -4,7 +4,7 @@ export type User = { id: string; name: string } | null;
 
 interface AuthContextType {
     user: User;
-    login: (userData: User) => void;
+    login: (token: string) => Promise<unknown>;
     logout: () => void;
     isLoading: boolean;
 }
