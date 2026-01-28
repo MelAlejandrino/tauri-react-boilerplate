@@ -5,7 +5,6 @@ use crate::supabase::client::Supabase;
 use dotenvy::dotenv;
 use std::env;
 use supabase_auth::models::AuthClient;
-use supabase_rs::SupabaseClient;
 
 mod commands;
 mod supabase;
