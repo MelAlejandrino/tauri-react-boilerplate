@@ -10,9 +10,9 @@ export const useAuthProvider = () => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            setIsLoading(true);
-
-            fetchUser(token);
+            (async () => {
+                await fetchUser(token);
+            })();
         } else {
             setIsLoading(false);
         }
@@ -20,8 +20,10 @@ export const useAuthProvider = () => {
 
 
     const fetchUser = async (token: string) => {
+        setIsLoading(true);
         try {
             const user = await getUserData(token);
+            console.log('user', user)
             setUser(user as User);
             return user;
         } catch (error) {
@@ -36,7 +38,6 @@ export const useAuthProvider = () => {
 
     const login = async (token: string) => {
         localStorage.setItem('token', token);
-        setIsLoading(true);
         const user = await fetchUser(token);
         return user;
     };

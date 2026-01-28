@@ -21,17 +21,17 @@ fn main() {
     let key = env::var("SUPABASE_ANON_KEY").expect("SUPABASE_ANON_KEY missing");
     let jwt_secret = env::var("SUPABASE_JWT_SECRET").expect("SUPABASE_JWT_SECRET missing");
 
-    let supabase = Supabase::new(&url, &key);
+    println!("Loaded Supabase URL: {}", &url);
+    println!("Loaded Anon Key (first 10 chars): {}", &key[..10]);
+    println!("Loaded Supabase JWT: {}", &jwt_secret);
+
     let auth_client = AuthClient::new(&url, &key, &jwt_secret);
+    let supabase = Supabase::new(url, key);
 
     let app_state = AppState {
         supabase,
         auth_client,
     };
-
-    println!("Loaded Supabase URL: {}", &url);
-    println!("Loaded Anon Key (first 10 chars): {}", &key[..10]);
-    println!("Loaded Supabase JWT: {}", &jwt_secret);
 
     tauri::Builder::default()
         .manage(app_state)

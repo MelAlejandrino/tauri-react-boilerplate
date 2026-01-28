@@ -1,7 +1,7 @@
 use crate::supabase::auth;
+use crate::supabase::models::UserFinal;
 use crate::supabase::users;
 use crate::AppState;
-use supabase_auth::models::User;
 
 #[tauri::command]
 pub async fn sign_in(
@@ -17,7 +17,7 @@ pub async fn sign_in(
 pub async fn get_user_data(
     state: tauri::State<'_, AppState>,
     token: String,
-) -> Result<User, String> {
+) -> Result<UserFinal, String> {
     let supabase = &state.supabase;
     users::get_user_data(supabase, &token).await
 }

@@ -3,6 +3,7 @@ import {useAuth} from "@/context/use-auth.ts";
 
 export default function Dashboard() {
     const {user, logout} = useAuth();
+    console.log('user', user)
 
     return (
         <div className="min-h-screen bg-background p-8">
@@ -10,7 +11,7 @@ export default function Dashboard() {
                 <header className="mb-8 flex items-center justify-between">
                     <h1 className="text-3xl font-bold">Dashboard</h1>
                     <div>
-                        <span className="mr-4">Welcome, {user?.name}</span>
+                        <span className="mr-4">Welcome, {user?.full_name}</span>
                         <Button variant="outline" onClick={logout}>
                             Logout
                         </Button>
