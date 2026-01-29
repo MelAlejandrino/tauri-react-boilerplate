@@ -1,15 +1,16 @@
 // src/layouts/ProtectedLayout.tsx
 import {Navigate, Outlet} from 'react-router-dom';
 import {useAuth} from "@/context/use-auth.ts";
+import {Spinner} from "@/components/ui/spinner.tsx";
 
 export default function ProtectedLayout() {
-    const {user, isLoading} = useAuth();
+    const {isLoading, isAuthenticated} = useAuth();
 
     if (isLoading) {
-        return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
+        return <div className="flex min-h-screen items-center justify-center"><Spinner/></div>;
     }
 
-    if (!user) {
+    if (!isAuthenticated) {
         return <Navigate to="/login" replace/>;
     }
 

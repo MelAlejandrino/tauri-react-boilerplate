@@ -1,14 +1,27 @@
 import {useEffect, useState} from "react";
 import {User} from "@/context/use-auth.ts";
-import {getUserData} from "@/context/get-user-data.ts";
+import {getUserData} from "@/api/get-all/get-user-data.ts";
 import {toast} from "sonner";
 
 export const useAuthProvider = () => {
     const [user, setUser] = useState<User>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [isAuthenticated, setIsAuthenticated] = useState(false)
+    const token = localStorage.getItem('token');
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
+        if (user) {
+            setIsAuthenticated(true)
+            return
+        }
+        if (token) {
+            setIsAuthenticated(true)
+            return;
+        }
+    }, [user, token]);
+
+
+    useEffect(() => {
         if (token) {
             (async () => {
                 await fetchUser(token);
@@ -23,7 +36,6 @@ export const useAuthProvider = () => {
         setIsLoading(true);
         try {
             const user = await getUserData(token);
-            console.log('user', user)
             setUser(user as User);
             return user;
         } catch (error) {
@@ -44,9 +56,12 @@ export const useAuthProvider = () => {
 
 
     const logout = () => {
+        setIsAuthenticated(false)
         localStorage.removeItem('token');
         setUser(null);
     };
 
-    return {user, isLoading, login, logout}
+    return {
+        user, isLoading, login, logout, isAuthenticated
+    }
 }

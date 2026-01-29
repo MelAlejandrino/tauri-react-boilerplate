@@ -25,6 +25,7 @@ export default function App() {
 }
 
 function NavigateToCorrectPage() {
-    const {user} = useAuth();
-    return <Navigate to={user ? '/dashboard' : '/login'} replace/>;
+    const {isAuthenticated} = useAuth();
+    console.log('isAuthenticated55', isAuthenticated)
+    return <Navigate to={isAuthenticated ? '/dashboard' : '/login'} replace/>;
 }

@@ -10,12 +10,14 @@ import {Spinner} from "@/components/ui/spinner.tsx";
 import {toast} from "sonner";
 
 export default function Login() {
-    const {login, isLoading} = useAuth();
+    const {login} = useAuth();
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [isLoggingIn, setIsLoggingIn] = useState(false)
 
     const handleLogin = async () => {
+        setIsLoggingIn(true)
         try {
             const token = await invoke('sign_in', {email, password})
             const user = await login(token as string);
@@ -25,6 +27,8 @@ export default function Login() {
 
         } catch (error) {
             toast.error(error as string);
+        } finally {
+            setIsLoggingIn(false)
         }
     };
 
@@ -55,8 +59,8 @@ export default function Login() {
                         />
                     </div>
 
-                    <Button onClick={handleLogin} disabled={isLoading} className="w-full mt-2">
-                        {isLoading ? <><Spinner/>Logging In</> : 'Log In'}
+                    <Button onClick={handleLogin} disabled={isLoggingIn} className="w-full mt-2">
+                        {isLoggingIn ? <><Spinner/>Logging In</> : 'Log In'}
                     </Button>
                 </CardContent>
             </Card>

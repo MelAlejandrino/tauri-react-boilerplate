@@ -1,9 +1,8 @@
 import {Button} from '@/components/ui/button';
-import {useAuth} from "@/context/use-auth.ts";
+import {useDashboard} from "@/features/dashboard/use-dashboard.ts";
 
 export default function Dashboard() {
-    const {user, logout} = useAuth();
-    console.log('user', user)
+    const {user, logout, profiles} = useDashboard()
 
     return (
         <div className="min-h-screen bg-background p-8">
@@ -17,14 +16,15 @@ export default function Dashboard() {
                         </Button>
                     </div>
                 </header>
-
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    <div className="rounded-lg border bg-card p-6 shadow-sm">
-                        <h3 className="text-lg font-semibold">Welcome Card</h3>
-                        <p className="mt-2 text-muted-foreground">
-                            This is your protected dashboard.
-                        </p>
-                    </div>
+                    {profiles?.map(profile => {
+                        return (
+                            <div className="rounded-lg border bg-card p-6 shadow-sm">
+                                <h1>{profile?.full_name}</h1>
+                            </div>
+
+                        )
+                    })}
                 </div>
             </div>
         </div>

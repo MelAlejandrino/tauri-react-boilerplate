@@ -5,6 +5,7 @@ export type User = { id: string; full_name: string } | null;
 interface AuthContextType {
     user: User;
     login: (token: string) => Promise<unknown>;
+    isAuthenticated: boolean;
     logout: () => void;
     isLoading: boolean;
 }
