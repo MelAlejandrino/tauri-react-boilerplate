@@ -7,6 +7,7 @@ use std::env;
 use supabase_auth::models::AuthClient;
 
 mod commands;
+mod config;
 mod supabase;
 
 struct AppState {
@@ -17,16 +18,12 @@ struct AppState {
 fn main() {
     dotenv().ok();
 
-    let url = env::var("SUPABASE_URL").expect("SUPABASE_URL missing");
-    let key = env::var("SUPABASE_ANON_KEY").expect("SUPABASE_ANON_KEY missing");
-    let jwt_secret = env::var("SUPABASE_JWT_SECRET").expect("SUPABASE_JWT_SECRET missing");
+    let url = config::CONFIG.url();
+    let key = config::CONFIG.key();
+    let jwt_secret = config::CONFIG.jwt_secret();
 
-    println!("Loaded Supabase URL: {}", &url);
-    println!("Loaded Anon Key (first 10 chars): {}", &key[..10]);
-    println!("Loaded Supabase JWT: {}", &jwt_secret);
-
-    let auth_client = AuthClient::new(&url, &key, &jwt_secret);
-    let supabase = Supabase::new(url, key);
+    let auth_client = AuthClient::new(url, key, jwt_secret);
+    let supabase = Supabase::new(url.to_string(), key.to_string());
 
     let app_state = AppState {
         supabase,

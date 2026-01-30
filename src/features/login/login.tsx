@@ -1,39 +1,16 @@
-import {useState} from 'react';
-import {useNavigate} from 'react-router-dom';
 import {Button} from '@/components/ui/button';
 import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
 import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
-import {useAuth} from '@/context/use-auth.ts';
-import {invoke} from "@tauri-apps/api/core";
 import {Spinner} from "@/components/ui/spinner.tsx";
-import {toast} from "sonner";
+import {useLogin} from "@/features/login/use-login.ts";
+import {Eye, EyeOff} from "lucide-react";
 
 export default function Login() {
-    const {login} = useAuth();
-    const navigate = useNavigate();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [isLoggingIn, setIsLoggingIn] = useState(false)
-
-    const handleLogin = async () => {
-        setIsLoggingIn(true)
-        try {
-            const token = await invoke('sign_in', {email, password})
-            const user = await login(token as string);
-            if (user) {
-                navigate('/dashboard', {replace: true});
-            }
-
-        } catch (error) {
-            toast.error(error as string);
-        } finally {
-            setIsLoggingIn(false)
-        }
-    };
+    const {email, setEmail, handleLogin, password, setPassword, isLoggingIn, showPassword, setShowPassword} = useLogin()
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-black">
+        <div className="flex min-h-screen items-center justify-center ">
             <Card className="w-full max-w-md shadow-lg">
                 <CardHeader className="text-center">
                     <CardTitle className="text-2xl font-bold">Sign in</CardTitle>
@@ -44,6 +21,7 @@ export default function Login() {
                         <Input
                             type="email"
                             placeholder="Enter your email"
+                            className={'bg-white'}
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
@@ -51,15 +29,33 @@ export default function Login() {
 
                     <div className="flex flex-col gap-1">
                         <Label>Password</Label>
-                        <Input
-                            type="password"
-                            placeholder="Enter your password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
+
+                        <div className="relative">
+                            <Input
+                                type={showPassword ? 'text' : 'password'}
+                                placeholder="Enter your password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="pr-10"
+                            />
+
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => setShowPassword(v => !v)}
+                                className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8"
+                                tabIndex={-1}
+                            >
+
+                                {showPassword ? <EyeOff className="h-4 w-4"/> : <Eye className="h-4 w-4"/>}
+                            </Button>
+                        </div>
                     </div>
 
-                    <Button onClick={handleLogin} disabled={isLoggingIn} className="w-full mt-2">
+
+                    <Button onClick={handleLogin} disabled={isLoggingIn} variant='default'
+                            className="w-full mt-2 ">
                         {isLoggingIn ? <><Spinner/>Logging In</> : 'Log In'}
                     </Button>
                 </CardContent>

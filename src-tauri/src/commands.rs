@@ -29,5 +29,6 @@ pub async fn get_all_profiles(
     token: String,
 ) -> Result<Vec<Profile>, String> {
     let supabase = &state.supabase;
-    users::get_all_profiles(supabase, &token).await
+    let auth_client = &state.auth_client;
+    users::get_all_profiles(supabase, &token, auth_client).await
 }

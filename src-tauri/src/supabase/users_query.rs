@@ -1,7 +1,7 @@
 use crate::supabase::client::Supabase;
 use crate::supabase::models::{Profile, UserFinal, UserWithProfile};
 use serde_json::json;
-use supabase_auth::models::User;
+use supabase_auth::models::{AuthClient, User};
 
 impl Supabase {
     pub async fn get_user(&self, token: &str) -> Result<User, String> {
@@ -68,12 +68,22 @@ impl Supabase {
         })
     }
 
-    pub async fn get_all_profiles(&self, token: &str) -> Result<Vec<Profile>, String> {
+    pub async fn get_all_profiles(
+        &self,
+        token: &str,
+        auth_client: &AuthClient,
+    ) -> Result<Vec<Profile>, String> {
+        let user = auth_client
+            .get_user(token)
+            .await
+            .map_err(|e| e.to_string())?;
+        let user_id = user.id;
         let res = self
             .db
             .from("profiles")
             .auth(token)
             .select("*")
+            .neq("id", user_id.to_string())
             .execute()
             .await
             .map_err(|e| e.to_string())?;

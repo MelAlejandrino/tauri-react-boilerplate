@@ -1,5 +1,6 @@
 use postgrest::Postgrest;
 use reqwest::Client;
+use supabase_auth::models::AuthClient;
 
 pub struct Supabase {
     pub url: String,
