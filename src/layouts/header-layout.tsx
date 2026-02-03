@@ -8,7 +8,7 @@ export const HeaderLayout = () => {
             <h1 className="text-3xl font-bold">Dashboard</h1>
             <div>
                 <span className="mr-4">Welcome, {user?.full_name}</span>
-                <Button variant="outline" onClick={logout}>
+                <Button variant="outline" className={'cursor-pointer'} onClick={logout}>
                     Logout
                 </Button>
             </div>

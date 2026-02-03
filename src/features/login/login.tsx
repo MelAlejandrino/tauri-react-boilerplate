@@ -55,7 +55,7 @@ export default function Login() {
 
 
                     <Button onClick={handleLogin} disabled={isLoggingIn} variant='default'
-                            className="w-full mt-2 ">
+                            className="w-full mt-2 cursor-pointer ">
                         {isLoggingIn ? <><Spinner/>Logging In</> : 'Log In'}
                     </Button>
                 </CardContent>

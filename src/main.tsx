@@ -4,6 +4,7 @@ import App from "./App";
 import {Toaster} from "@/components/ui/sonner.tsx";
 import "@/App.css"
 
+
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <React.StrictMode>
         <App/>

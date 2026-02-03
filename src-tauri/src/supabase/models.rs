@@ -11,6 +11,12 @@ pub struct Profile {
     pub address: Option<String>,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Role {
+    pub id: uuid::Uuid,
+    pub role: String,
+}
+
 #[derive(Debug, Serialize)]
 pub struct UserWithProfile {
     pub user: User,
