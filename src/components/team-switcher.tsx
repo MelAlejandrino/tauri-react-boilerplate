@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import {ChevronDown, Plus} from "lucide-react"
+import {ChevronDown, Home, Plus} from "lucide-react"
 
 import {
     DropdownMenu,
@@ -17,6 +17,9 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import {useCallback} from "react";
+import {useWorkspaceStore} from "@/store/workspaces-store.ts";
+import {useNavigate} from "react-router-dom";
 
 export function TeamSwitcher({
                                  teams,
@@ -29,9 +32,17 @@ export function TeamSwitcher({
 }) {
     const [activeTeam, setActiveTeam] = React.useState(teams[0])
 
+    const {setWorkspaceSelected} = useWorkspaceStore()
+    const navigate = useNavigate()
+
     if (!activeTeam) {
         return null
     }
+
+    const handleHomeNavigate = useCallback(() => {
+        setWorkspaceSelected("")
+        navigate("/")
+    }, [])
 
     return (
         <SidebarMenu>
@@ -53,6 +64,16 @@ export function TeamSwitcher({
                         side="bottom"
                         sideOffset={4}
                     >
+                        <DropdownMenuItem
+                            key={'home'}
+                            onClick={handleHomeNavigate}
+                            className="gap-2 p-2"
+                        >
+                            <div className="flex size-6 items-center justify-center rounded-xs">
+                                <Home/>
+                            </div>
+                            Home
+                        </DropdownMenuItem>
                         <DropdownMenuLabel className="text-muted-foreground text-xs">
                             Teams
                         </DropdownMenuLabel>

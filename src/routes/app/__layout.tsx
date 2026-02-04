@@ -8,9 +8,16 @@ import {
     BreadcrumbPage, BreadcrumbSeparator
 } from "@/components/ui/breadcrumb.tsx";
 import {AppSidebar} from "@/components/app-sidebar.tsx";
-import {Outlet} from "react-router-dom";
+import {Navigate, Outlet} from "react-router-dom";
+import {useWorkspaceStore} from "@/store/workspaces-store.ts";
 
 export default function AppLayout() {
+    const {workspaceSelected} = useWorkspaceStore()
+    console.log('workspace', workspaceSelected)
+
+    if (!workspaceSelected && location.pathname !== "/selection") {
+        return <Navigate to={"/selection"} replace/>
+    }
     return (
         <SidebarProvider
             className='bg-sidebar [&_[data-slot="sidebar-container"]]:border-r-0'

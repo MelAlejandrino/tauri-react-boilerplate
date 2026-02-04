@@ -4,6 +4,7 @@ import {Home} from "@/routes";
 import DashboardLayout from "@/routes/app/dashbooard/__layout.tsx";
 import {DashboardIndex} from "@/routes/app/dashbooard";
 import AppLayout from "@/routes/app/__layout.tsx";
+import {Test} from "@/routes/app/test.tsx";
 
 export const router = createBrowserRouter([
     {
@@ -27,6 +28,10 @@ export const router = createBrowserRouter([
                         }]
                     }
                 ]
+            },
+            {
+                path: "selection",
+                element: <Test/>
             },
             {
                 path: "*",

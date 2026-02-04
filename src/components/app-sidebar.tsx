@@ -26,6 +26,7 @@ import {
     SidebarHeader,
     SidebarRail,
 } from "@/components/ui/sidebar"
+import {Button} from "@/components/ui/button.tsx";
 
 // This is sample data.
 const data = {
